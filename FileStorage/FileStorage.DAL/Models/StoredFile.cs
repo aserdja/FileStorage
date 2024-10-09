@@ -8,9 +8,6 @@
 		public double Size { get; set; }
 		public string Path { get; set; } = null!;
 
-		public int StoredFileDetailsId { get; set; }
-		public StoredFileDetails StoredFilesDetails { get; set; } = null!;
-
 		public int UserId { get; set; }
 		public User User { get; set; } = null!;
 	}

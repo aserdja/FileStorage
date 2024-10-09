@@ -79,10 +79,6 @@ namespace FileStorage.DAL.Data
 				.HasMany<StoredFile>(u => u.StoredFiles)
 				.WithOne(sf => sf.User)
 				.HasForeignKey(u => u.UserId);
-
-			modelBuilder.Entity<StoredFile>()
-				.HasOne<StoredFileDetails>(sf => sf.StoredFilesDetails)
-				.WithOne(sfd => sfd.StoredFile);
 		}
 	}
 }
