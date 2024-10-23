@@ -5,7 +5,13 @@ namespace FileStorage.DAL.Data
 {
 	public class FileStorageDbContext : DbContext
 	{
-		public virtual DbSet<User> Users { get; set; }
+        public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options)
+           : base(options)
+        {
+        }
+
+
+        public virtual DbSet<User> Users { get; set; }
 		public virtual DbSet<StoredFile> StoredFiles { get; set; }
 		public virtual DbSet<StoredFileDetails> StoredFilesDetails { get; set; }
 
