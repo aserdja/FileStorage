@@ -6,5 +6,6 @@ namespace FileStorage.DAL.Repositories.Interfaces
 	{
 		Task<User?> GetByEmailAndPasswordAsync(string email, string password);
 		Task<User?> GetByEmailAsync(string email);
+		Task<User?> GetByLoginAsync(string login);
 	}
 }

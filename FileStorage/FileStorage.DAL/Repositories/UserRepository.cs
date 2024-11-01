@@ -30,5 +30,10 @@ namespace FileStorage.DAL.Repositories
 		{
 			return _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 		}
+
+		public Task<User?> GetByLoginAsync(string login)
+		{
+			return _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+		}
 	}
 }
