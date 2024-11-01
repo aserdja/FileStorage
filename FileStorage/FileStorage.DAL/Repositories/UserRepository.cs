@@ -25,5 +25,10 @@ namespace FileStorage.DAL.Repositories
 
 			return null;
 		}
+
+		public Task<User?> GetByEmailAsync(string email)
+		{
+			return _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+		}
 	}
 }
