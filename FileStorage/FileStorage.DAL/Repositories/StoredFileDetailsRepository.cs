@@ -1,6 +1,7 @@
 ﻿using FileStorage.DAL.Data;
 using FileStorage.DAL.Models;
 using FileStorage.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FileStorage.DAL.Repositories
 {
@@ -17,6 +18,7 @@ namespace FileStorage.DAL.Repositories
 
         public async Task CreateAsync(StoredFileDetails storedFileDetails)
         {
+			await _context.StoredFilesDetails.AddAsync(storedFileDetails);
         }
     }
 }
