@@ -12,5 +12,10 @@ namespace FileStorage.DAL.Repositories
 		{
 			_context = context;
 		}
-	}
+
+		public async Task CreateAsync(StoredFile storedFile) 
+		{
+		}
+
+    }
 }
