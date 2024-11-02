@@ -1,4 +1,5 @@
-﻿using FileStorage.BL.Services.Interfaces;
+﻿using FileStorage.BL.Models;
+using FileStorage.BL.Services.Interfaces;
 using FileStorage.DAL.UnitOfWork;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,7 +9,19 @@ namespace FileStorage.BL.Services
 	{
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-		public async Task<bool> CheckCredentialsUniqueness(string login, string email)
+		public async Task<UserRegistration?> ValidateUserCredentials(UserRegistration userRegistration)
+		{
+			if (await CheckCredentialsUniqueness(userRegistration.Login, userRegistration.Email)
+				&& CheckCredentialsLength(userRegistration.Name, userRegistration.Login, userRegistration.Email, userRegistration.Password)
+				&& ConfirmPassword(userRegistration.Password, userRegistration.PasswordConfirmation))
+			{
+				return userRegistration;
+			}
+
+			return null;
+		}
+
+		private async Task<bool> CheckCredentialsUniqueness(string login, string email)
 		{
 			if (await _unitOfWork.Users.GetByLoginAsync(login) != null)
 			{
@@ -22,7 +35,7 @@ namespace FileStorage.BL.Services
 			return true;
 		}
 
-		public bool CheckCredentialsLength(string name, string login, string email, string password)
+		private bool CheckCredentialsLength(string name, string login, string email, string password)
 		{
 			if (name.Trim().IsNullOrEmpty() && name.Length > 20)
 			{
@@ -42,6 +55,11 @@ namespace FileStorage.BL.Services
 			}
 
 			return true;
+		}
+
+		private bool ConfirmPassword(string password, string passwordConfirmation)
+		{
+			return password.Equals(passwordConfirmation);
 		}
 	}
 }
