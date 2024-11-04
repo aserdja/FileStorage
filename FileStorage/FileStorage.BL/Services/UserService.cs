@@ -23,6 +23,18 @@ namespace FileStorage.BL.Services
 			return false;
 		}
 
+		public async Task<bool> LogInUserAsync(string email, string password)
+		{
+			var user = await _unitOfWork.Users.GetByEmailAndPasswordAsync(email, password);
+
+			if (user != null)
+			{
+				return true;
+			}
+
+			return false;
+        }
+
 		private User ConvertToUser(UserRegistration userRegistrationModel)
 		{
 			return new User
