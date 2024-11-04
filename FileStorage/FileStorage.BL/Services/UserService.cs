@@ -10,10 +10,8 @@ namespace FileStorage.BL.Services
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IUserValidationService userValidationService = userValidationService;
 
-		public async Task<bool> RegisterUserAsync(string name, string login, string email, string password, string passwordConfirmation)
+		public async Task<bool> RegisterUserAsync(UserRegistration newUser)
 		{
-			var newUser = new UserRegistration { Name = name, Login = login, Email = email, Password = password, PasswordConfirmation = passwordConfirmation };
-
 			if (userValidationService.ValidateUserCredentials(newUser) != null)
 			{
 				_unitOfWork.Users.Add(ConvertToUser(newUser));
