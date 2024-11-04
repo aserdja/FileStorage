@@ -1,12 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FileStorage.BL.Models;
+using FileStorage.BL.Services.Interfaces;
+using FileStorage.DAL.Models;
+using FileStorage.DAL.UnitOfWork;
 
 namespace FileStorage.BL.Services
 {
-    public class UserService
-    {
-    }
+	public class UserService(IUnitOfWork unitOfWork, IUserValidationService userValidationService) : IUserService
+	{
+		private readonly IUnitOfWork _unitOfWork = unitOfWork;
+		private readonly IUserValidationService userValidationService = userValidationService;
+
+		public async Task<bool> RegisterUserAsync(UserRegistration newUser)
+		{
+			if (userValidationService.ValidateUserCredentials(newUser) != null)
+			{
+				_unitOfWork.Users.Add(ConvertToUser(newUser));
+				
+				await _unitOfWork.CommitAsync();
+				return true;
+			}
+
+			return false;
+		}
+
+		public async Task<bool> LogInUserAsync(string email, string password)
+		{
+			var user = await _unitOfWork.Users.GetByEmailAndPasswordAsync(email, password);
+
+			if (user != null)
+			{
+				return true;
+			}
+
+			return false;
+        }
+
+		private User ConvertToUser(UserRegistration userRegistrationModel)
+		{
+			return new User
+			{
+				Name = userRegistrationModel.Name,
+				Login = userRegistrationModel.Login,
+				Email = userRegistrationModel.Email,
+				Password = userRegistrationModel.Password,
+			};
+		}
+	}
 }
