@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FileStorage.BL\FileStorage.BL.csproj" />
     <ProjectReference Include="..\FileStorage.DAL\FileStorage.DAL.csproj" />
   </ItemGroup>
