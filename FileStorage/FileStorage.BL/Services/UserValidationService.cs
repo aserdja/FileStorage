@@ -11,9 +11,11 @@ namespace FileStorage.BL.Services
 
 		public async Task<UserRegistration?> ValidateUserCredentials(UserRegistration userRegistration)
 		{
-			if (await CheckCredentialsUniqueness(userRegistration.Login, userRegistration.Email)
-				&& CheckCredentialsLength(userRegistration.Name, userRegistration.Login, userRegistration.Email, userRegistration.Password)
-				&& ConfirmPassword(userRegistration.Password, userRegistration.PasswordConfirmation))
+			bool isLengthAvailable = CheckCredentialsLength(userRegistration.Name, userRegistration.Login, userRegistration.Email, userRegistration.Password);
+			bool isPasswordConfirmed = ConfirmPassword(userRegistration.Password, userRegistration.PasswordConfirmation);
+			bool isUniqueness = await CheckCredentialsUniqueness(userRegistration.Login, userRegistration.Email);
+
+			if (isLengthAvailable && isPasswordConfirmed && isUniqueness)
 			{
 				return userRegistration;
 			}

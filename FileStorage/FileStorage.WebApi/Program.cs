@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(
 	{
 		option.LoginPath = "/api/user/signin";
 		option.LogoutPath = "/api/user/signout";
-		option.ExpireTimeSpan = TimeSpan.FromMinutes(2);
+		option.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 	});
 
 builder.Services.AddDbContext<FileStorageDbContext>();
