@@ -14,14 +14,18 @@ namespace FileStorage.WebApi.Controllers
 	{
 		private readonly IUserService _userService = userService;
 
-		//dbcontext exception
 		[HttpPost("signup")]
 		public async Task<IActionResult> SignUp([FromForm] UserRegistration newUser)
 		{
+			if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+			{
+				return Conflict("You are already logged in!");
+			}
 			if (!ModelState.IsValid)
 			{
 				return BadRequest();
 			}
+
 			try
 			{
 				bool registrationResult = await _userService.RegisterUserAsync(newUser);
@@ -48,26 +52,25 @@ namespace FileStorage.WebApi.Controllers
 		[HttpPost("signin")]
 		public async Task<IActionResult> SingIn([FromForm] UserAuthentication user)
 		{
+			if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+			{
+				return Conflict("You are already logged in!");
+			}
+			if (!ModelState.IsValid)
+			{
+				return BadRequest();
+			}
+
 			try
 			{
-				if (ModelState.IsValid)
+				bool loginResult = await _userService.LogInUserAsync(user);
+				if (!loginResult)
 				{
-					if (await _userService.LogInUserAsync(user))
-					{
-						var claims = new List<Claim>()
-						{
-							new Claim(ClaimTypes.Name, user.Email),
-							new Claim(ClaimTypes.Role, "User")
-						};
-
-						var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-						return Ok($"{claimsIdentity.Name} authenticated!");
-					}
-					return NotFound();
+					return Unauthorized();
 				}
-				return BadRequest();
+
+				await AuthenticateCookieSession(user.Email);
+				return Ok($"{user.Email} authenticated!");
 			}
 			catch (Exception)
 			{
@@ -78,6 +81,11 @@ namespace FileStorage.WebApi.Controllers
 		[HttpPost("signout")]
 		public new async Task<IActionResult> SignOut()
 		{
+			if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
+			{
+				return Conflict("You are not authorized to your account!");
+			}
+
 			var claims = HttpContext.User.Claims;
 
 			if (claims.FirstOrDefault(x => x.Type == ClaimTypes.Name) != null)
@@ -91,17 +99,22 @@ namespace FileStorage.WebApi.Controllers
 
 		//test-method
 		[HttpGet]
-		public async Task<IActionResult> GetCurrentUser()
+		public IActionResult GetCurrentUser()
 		{
 			try
 			{
 				var claims = HttpContext.User.Claims;
+
+				if (claims.FirstOrDefault(x => x.Type == ClaimTypes.Name) == null)
+				{
+					return Unauthorized();
+				}
+
 				return Ok(claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value);
 			}
 			catch (Exception)
 			{
-
-				throw;
+				return StatusCode(500);
 			}
 		}
 

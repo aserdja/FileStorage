@@ -14,11 +14,13 @@ namespace FileStorage.BL.Services
 
 		public async Task<bool> RegisterUserAsync(UserRegistration newUser)
 		{
-			if (userValidationService.ValidateUserCredentials(newUser) != null)
+			var validationResult = await userValidationService.ValidateUserCredentials(newUser);
+			
+			if (validationResult != null)
 			{
 				_unitOfWork.Users.Add(ConvertToUser(newUser));
-				
 				await _unitOfWork.CommitAsync();
+
 				return true;
 			}
 
