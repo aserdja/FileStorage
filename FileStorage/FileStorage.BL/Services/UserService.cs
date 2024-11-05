@@ -2,6 +2,8 @@ using FileStorage.BL.Models;
 using FileStorage.BL.Services.Interfaces;
 using FileStorage.DAL.Models;
 using FileStorage.DAL.UnitOfWork;
+using System.Net.Http;
+using System.Security.Claims;
 
 namespace FileStorage.BL.Services
 {
@@ -23,9 +25,9 @@ namespace FileStorage.BL.Services
 			return false;
 		}
 
-		public async Task<bool> LogInUserAsync(string email, string password)
+		public async Task<bool> LogInUserAsync(UserAuthentication userAuthentication)
 		{
-			var user = await _unitOfWork.Users.GetByEmailAndPasswordAsync(email, password);
+			var user = await _unitOfWork.Users.GetByEmailAndPasswordAsync(userAuthentication.Email, userAuthentication.Password);
 
 			if (user != null)
 			{
