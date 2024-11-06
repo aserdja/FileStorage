@@ -1,4 +1,5 @@
 ﻿using FileStorage.DAL.Models;
+using FileStorage.DAL.Secrets;
 using Microsoft.EntityFrameworkCore;
 
 namespace FileStorage.DAL.Data
@@ -11,7 +12,7 @@ namespace FileStorage.DAL.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer();
+			optionsBuilder.UseSqlServer(DbSecretManager.GetDbCredentials().Result);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
