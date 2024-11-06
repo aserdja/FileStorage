@@ -1,14 +1,14 @@
-﻿using FileStorage.BL.Services.Interfaces;
-using FileStorage.BL.Services;
-using FileStorage.DAL.Repositories.Interfaces;
+﻿using FileStorage.DAL.Repositories.Interfaces;
 using FileStorage.DAL.Repositories;
 using FileStorage.DAL.UnitOfWork;
 using FileStorage.DAL.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using FileStorage.BL.Services.UserServices;
+using FileStorage.BL.Services.UserServices.Interfaces;
 
 namespace FileStorage.WebApi.Extensions
 {
-	public static class ServiceExtensions
+    public static class ServiceExtensions
 	{
 		public static void AddApplicationServices(this IServiceCollection services)
 		{

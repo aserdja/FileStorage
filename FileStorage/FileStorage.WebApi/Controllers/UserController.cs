@@ -1,14 +1,14 @@
 ﻿using FileStorage.BL.Models;
-using FileStorage.BL.Services.Interfaces;
 using FileStorage.DAL.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using FileStorage.BL.Services.UserServices.Interfaces;
 
 namespace FileStorage.WebApi.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class UserController(IUserService userService) : Controller
 	{
