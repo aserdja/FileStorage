@@ -44,6 +44,26 @@ namespace FileStorage.WebApi.Controllers
 			}
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetFiles()
+		{
+			var currentUserEmail = GetCurrentUserEmail();
+			if (currentUserEmail == null)
+			{
+				return Unauthorized();
+			}
+
+			try
+			{
+				var filesCollection = _fileService.GetFilesByEmailAsync(currentUserEmail);
+				return Ok(await filesCollection);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+
 		private FileUploading CreateNewFileUploading(IFormFile file)
 		{
 			return new FileUploading

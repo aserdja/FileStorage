@@ -25,6 +25,11 @@ namespace FileStorage.BL.Services.FileServices
 			return storedFile;
 		}
 
+		public async Task<ICollection<StoredFile>> GetFilesByEmailAsync(string currentUserEmail)
+		{
+			return await _unitOfWork.StoredFiles.GetAllByEmailAsync(currentUserEmail);
+		}
+
 		private StoredFile ConvertToStoredFile(FileUploading fileToUpload, User currentUser)
 		{
 			return new StoredFile
