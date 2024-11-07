@@ -12,15 +12,15 @@ namespace FileStorage.BL.Services.FileServices
 
 		public async Task<bool> UploadFileToS3BucketAsync(FileUploading fileUploading, string currentUserEmail)
 		{
+			var request = new PutObjectRequest()
+			{
+				BucketName = _bucketName,
+				Key = $"{currentUserEmail}/{fileUploading.FileName}",
+				InputStream = fileUploading.Stream
+			};
+
 			try
 			{
-				var request = new PutObjectRequest()
-				{
-					BucketName = _bucketName,
-					Key = $"{currentUserEmail}/{fileUploading.FileName}",
-					InputStream = fileUploading.Stream
-				};
-
 				await _s3Client.PutObjectAsync(request);
 				return true;
 			}
