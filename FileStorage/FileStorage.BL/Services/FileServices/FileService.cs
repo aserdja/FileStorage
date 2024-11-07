@@ -31,7 +31,7 @@ namespace FileStorage.BL.Services.FileServices
 			{
 				Name = fileToUpload.FileName,
 				Type = fileToUpload.ContentType,
-				Size = fileToUpload.Length / Math.Pow(1024, 3),
+				Size = Math.Round((fileToUpload.Length / 1000.0), 4),
 				Path = $"{currentUser.Email}/{fileToUpload.FileName}",
 				User = currentUser
 			};
