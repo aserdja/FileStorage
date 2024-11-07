@@ -1,6 +1,7 @@
 ﻿using FileStorage.BL.Models;
 using FileStorage.BL.Services.FileServices.Interfaces;
 using FileStorage.BL.Services.UserServices.Interfaces;
+using FileStorage.DAL.Repositories.Interfaces;
 using FileStorage.DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,8 +56,15 @@ namespace FileStorage.WebApi.Controllers
 
 			try
 			{
-				var filesCollection = _fileService.GetFilesByEmailAsync(currentUserEmail);
-				return Ok(await filesCollection);
+				var storedFilesCollection = _fileService.GetFilesByEmailAsync(currentUserEmail);
+				var storedFilesDetailsCollection = _unitOfWork.StoredFilesDetails.GetAllByStoredFilesAsync(await storedFilesCollection);
+
+				if (storedFilesDetailsCollection == null)
+				{
+					Ok("You haven't uploaded files to storage yet");
+				}
+
+				return Ok();
 			}
 			catch (Exception)
 			{
