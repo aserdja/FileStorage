@@ -1,13 +1,14 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
 using FileStorage.BL.Models;
 using FileStorage.BL.Services.FileServices.Interfaces;
 
 namespace FileStorage.BL.Services.FileServices
 {
-	public class S3BucketService(IAmazonS3 s3Client) : IS3BucketService
+	public class S3BucketService: IS3BucketService
 	{
-		private readonly IAmazonS3 _s3Client = s3Client;
+		private readonly IAmazonS3 _s3Client = new AmazonS3Client(RegionEndpoint.EUCentral1);
 		private readonly string _bucketName = "filestorage.s3bucket";
 
 		public async Task<bool> UploadFileToS3BucketAsync(FileUploading fileUploading, string currentUserEmail)

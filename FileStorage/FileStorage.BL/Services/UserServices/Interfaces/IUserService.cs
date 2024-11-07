@@ -1,4 +1,5 @@
 ﻿using FileStorage.BL.Models;
+using FileStorage.DAL.Models;
 
 namespace FileStorage.BL.Services.UserServices.Interfaces
 {
