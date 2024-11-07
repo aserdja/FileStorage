@@ -19,7 +19,11 @@ namespace FileStorage.BL.Services.FileServices
 			}
 
 			var storedFile = ConvertToStoredFile(fileToUpload, currentUser);
+			var storedFileDetails = CreateStoredFileDetails(storedFile);
+
 			_unitOfWork.StoredFiles.Add(storedFile);
+			_unitOfWork.StoredFilesDetails.Add(storedFileDetails);
+
 			await _unitOfWork.CommitAsync();
 
 			return storedFile;
@@ -36,9 +40,19 @@ namespace FileStorage.BL.Services.FileServices
 			{
 				Name = fileToUpload.FileName,
 				Type = fileToUpload.ContentType,
-				Size = Math.Round((fileToUpload.Length / 1000.0), 4),
+				Size = 0.0,
 				Path = $"{currentUser.Email}/{fileToUpload.FileName}",
 				User = currentUser
+			};
+		}
+
+		private StoredFileDetails CreateStoredFileDetails(StoredFile storedFile)
+		{
+			return new StoredFileDetails
+			{
+				UploadDateTime = DateTime.Now,
+				ExpireDateTime = DateTime.Now.AddMonths(2),
+				StoredFile = storedFile
 			};
 		}
 	}
