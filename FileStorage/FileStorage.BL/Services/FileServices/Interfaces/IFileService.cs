@@ -6,6 +6,8 @@ namespace FileStorage.BL.Services.FileServices.Interfaces
 	public interface IFileService
 	{
 		Task<StoredFile?> UploadFileAsync(FileUploading fileToUpload, User currentUser);
+		Task<bool> DownloadFileAsync(string fileName, string currentUserEmail);
+		Task<bool> DeleteFileAsync(string fileName, string currentUserEmail);
 		Task<ICollection<StoredFile>> GetFilesByEmailAsync(string currentUserEmail);
 	}
 }

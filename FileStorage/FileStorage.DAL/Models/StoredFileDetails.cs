@@ -3,7 +3,7 @@
 	public class StoredFileDetails
 	{
 		public int Id { get; set; }
-		public bool IsPublic { get; set; }
+		public bool IsPublic { get; set; } = false;
 		public bool IsDeleted { get; set; } = false;
 		public DateTime UploadDateTime { get; set; }
 		public DateTime ExpireDateTime { get; set; }

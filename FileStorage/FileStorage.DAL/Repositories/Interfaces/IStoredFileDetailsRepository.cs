@@ -4,5 +4,7 @@ namespace FileStorage.DAL.Repositories.Interfaces
 {
 	public interface IStoredFileDetailsRepository : IRepository<StoredFileDetails>
 	{
+		Task<ICollection<StoredFileDetails?>> GetAllByStoredFilesAsync(ICollection<StoredFile> storedFiles);
+		Task<StoredFileDetails?> GetByStoredFileId(int id);
 	}
 }

@@ -8,6 +8,8 @@ using FileStorage.BL.Services.UserServices.Interfaces;
 using FileStorage.BL.Services.FileServices.Interfaces;
 using FileStorage.BL.Services.FileServices;
 using Amazon.S3;
+using AutoMapper;
+using FileStorage.WebApi.Mapping;
 
 namespace FileStorage.WebApi.Extensions
 {
@@ -24,6 +26,7 @@ namespace FileStorage.WebApi.Extensions
 			services.AddScoped<IS3BucketService, S3BucketService>();
 			services.AddScoped<IFileService, FileService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddAutoMapper(typeof(StoredFileMappingProfile));
 		}
 
 		public static void AddDbContext(this IServiceCollection services)
