@@ -26,5 +26,10 @@ namespace FileStorage.DAL.Repositories
 
 			return result;
 		}
+
+		public async Task<StoredFileDetails?> GetByStoredFileId(int id)
+		{
+			return await _context.StoredFilesDetails.FirstOrDefaultAsync(sfd => sfd.StoredFileId.Equals(id));
+		}
 	}
 }
