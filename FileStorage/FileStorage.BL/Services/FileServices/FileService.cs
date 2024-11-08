@@ -29,6 +29,16 @@ namespace FileStorage.BL.Services.FileServices
 			return storedFile;
 		}
 
+		public async Task<bool> DownloadFileAsync(string fileName, string currentUserEmail)
+		{
+			bool downloadingResult = await _bucketService.DownloadFileFromS3BucketAsync(fileName, currentUserEmail);
+			if (!downloadingResult)
+			{
+				return false;
+			}
+			return true;			
+		}
+
 		public async Task<ICollection<StoredFile>> GetFilesByEmailAsync(string currentUserEmail)
 		{
 			return await _unitOfWork.StoredFiles.GetAllByEmailAsync(currentUserEmail);

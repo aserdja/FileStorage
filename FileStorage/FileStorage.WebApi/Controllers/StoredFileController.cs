@@ -84,6 +84,45 @@ namespace FileStorage.WebApi.Controllers
 			}
 		}
 
+		[HttpPost("download")]
+		public async Task<IActionResult> DownloadFile([FromForm] int fileId)
+		{
+			var currentUserEmail = GetCurrentUserEmail();
+			if (currentUserEmail == null)
+			{
+				return Unauthorized();
+			}
+
+			try
+			{
+				var fileToDownload = await _unitOfWork.StoredFiles.GetByIdAsync(fileId);
+				var fileOwner = await _unitOfWork.Users.GetByEmailAsync(currentUserEmail);
+
+				if (fileToDownload == null)
+				{
+					return NotFound("There is no file with this ID!");
+				}
+
+				if (fileToDownload.UserId != fileOwner?.Id)
+				{
+					return Forbid("This file is not available for you to download!");
+				}
+
+				bool isDownloaded = await _fileService.DownloadFileAsync(fileToDownload.Name, currentUserEmail);
+
+				if (!isDownloaded)
+				{
+					return StatusCode(500);
+				}
+
+				return Ok();
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+
 		private FileUploading CreateNewFileUploading(IFormFile file)
 		{
 			return new FileUploading
