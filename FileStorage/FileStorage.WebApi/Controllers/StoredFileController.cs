@@ -24,6 +24,11 @@ namespace FileStorage.WebApi.Controllers
 		[HttpPost("upload")]
 		public async Task<IActionResult> UploadFile(IFormFile file)
 		{
+			var currentUserEmail = GetCurrentUserEmail();
+			if (currentUserEmail == null)
+			{
+				return Unauthorized();
+			}
 			if (!ModelState.IsValid)
 			{
 				return BadRequest();
@@ -31,11 +36,6 @@ namespace FileStorage.WebApi.Controllers
 
 			try
 			{
-				var currentUserEmail = GetCurrentUserEmail();
-				if (currentUserEmail == null)
-				{
-					return Unauthorized();
-				}
 				
 				var currentUser = await _unitOfWork.Users.GetByEmailAsync(currentUserEmail);
 				var fileUploading = CreateNewFileUploading(file);
