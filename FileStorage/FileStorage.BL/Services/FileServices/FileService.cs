@@ -39,6 +39,16 @@ namespace FileStorage.BL.Services.FileServices
 			return true;			
 		}
 
+		public async Task<bool> DeleteFileAsync(string fileName, string currentUserEmail)
+		{
+			bool deleteResult = await _bucketService.DeleteFileFromS3BucketAsync(fileName, currentUserEmail);
+			if (!deleteResult)
+			{
+				return false;
+			}
+			return true;
+		}
+
 		public async Task<ICollection<StoredFile>> GetFilesByEmailAsync(string currentUserEmail)
 		{
 			return await _unitOfWork.StoredFiles.GetAllByEmailAsync(currentUserEmail);
