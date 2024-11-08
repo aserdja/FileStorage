@@ -18,5 +18,10 @@ namespace FileStorage.DAL.Repositories
 		{
 			return await _context.StoredFiles.Where(sf => sf.User.Email.Equals(userEmail)).ToListAsync();
 		}
+
+		public async Task<StoredFile?> GetByIdAsync(int id)
+		{
+			return await _context.StoredFiles.Where(sf => sf.Id.Equals(id)).FirstOrDefaultAsync();
+		}
 	}
 }
