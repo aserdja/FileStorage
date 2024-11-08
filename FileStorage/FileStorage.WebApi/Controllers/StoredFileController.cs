@@ -21,7 +21,7 @@ namespace FileStorage.WebApi.Controllers
 		private readonly IUnitOfWork _unitOfWork = unitOfWork;
 		private readonly IMapper _mapper = mapper;
 
-		[HttpPost]
+		[HttpPost("upload")]
 		public async Task<IActionResult> UploadFile(IFormFile file)
 		{
 			if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace FileStorage.WebApi.Controllers
 			}
 		}
 
-		[HttpGet]
+		[HttpGet("getall")]
 		public async Task<IActionResult> GetFiles()
 		{
 			var currentUserEmail = GetCurrentUserEmail();
@@ -114,6 +114,49 @@ namespace FileStorage.WebApi.Controllers
 				{
 					return StatusCode(500);
 				}
+
+				return Ok();
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+
+		[HttpDelete("delete")]
+		public async Task<IActionResult> DeleteFile([FromForm] int fileId)
+		{
+			var currentUserEmail = GetCurrentUserEmail();
+			if (currentUserEmail == null)
+			{
+				return Unauthorized();
+			}
+
+			try
+			{
+				var fileToDelete = await _unitOfWork.StoredFiles.GetByIdAsync(fileId);
+				var fileDetailsToDelete = await _unitOfWork.StoredFilesDetails.GetByStoredFileId(fileToDelete.Id);
+				var fileOwner = await _unitOfWork.Users.GetByEmailAsync(currentUserEmail);
+
+				if (fileToDelete == null)
+				{
+					return NotFound("There is no file with this ID!");
+				}
+
+				if (fileToDelete.UserId != fileOwner?.Id)
+				{
+					return Forbid("This file is not available for you to delete!");
+				}
+
+				bool isDeleted = await _fileService.DeleteFileAsync(fileToDelete.Name, currentUserEmail);
+				if (!isDeleted)
+				{
+					return StatusCode(500);
+				}
+
+				_unitOfWork.StoredFilesDetails.Delete(fileDetailsToDelete);
+				_unitOfWork.StoredFiles.Delete(fileToDelete);
+				await _unitOfWork.CommitAsync();
 
 				return Ok();
 			}
